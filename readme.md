@@ -5,32 +5,17 @@ An implementation of DeblurrGAN described in the paper using tensorflow.
 Published in CVPR 2018, written by O. Kupyn, V. Budzan, M. Mykhailych, D. Mishkin and J. Matas
 
 ## Requirement
-- Python 3.6.4
-- Tensorflow 1.8.0 
+- Python 3.6.5
+- Tensorflow 1.10.1 
 - Pillow 5.0.0
 - numpy 1.14.5
-
-## How to Run
-If you want to see more example commands, please refer to run.sh file in my repository.
-
-Train
-
-```
-python main.py
-```
-
-test
-
-```
-python main.py --mode test
-```
+- Pretrained VGG19 file : [vgg19.npy](https://mega.nz/#!xZ8glS6J!MAnE91ND_WyfZ_8mvkuSa2YcA7q-1ehfSm-Q1fxOvvs) (for training!)
 
 ## Datasets
-Shell script which downloads datasets will be uploaded soon!
+- [GOPRO dataset](https://github.com/SeungjunNah/DeepDeblur_release)
 
 ## Pre-trained model
-Pre-trained model will be uploaded soon!
-
+- [GOPRO_model](https://drive.google.com/open?id=1Sg0LQUAsf3wfDQNMwUKKM2O-uJMWQWxw)
 
 ## Experimental Results
 Experimental results on GOPRO dataset

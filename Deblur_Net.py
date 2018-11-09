@@ -4,7 +4,6 @@ import numpy as np
 from data_loader import dataloader
 from vgg19 import Vgg19
 
-
 class Deblur_Net():
     
     def __init__(self, args):

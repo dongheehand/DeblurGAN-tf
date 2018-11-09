@@ -1,20 +1,9 @@
-
-# coding: utf-8
-
-# In[ ]:
-
-
 import os
 import tensorflow as tf
 from PIL import Image
 import numpy as np
 import time
 import util
-from skimage.measure import compare_ssim as ssim
-
-
-# In[ ]:
-
 
 def train(args, model, sess, saver):
     

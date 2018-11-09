@@ -45,12 +45,6 @@ parser.add_argument("--fine_tuning", type = str2bool, default = False)
 parser.add_argument("--log_freq", type = int, default = 1)
 parser.add_argument("--model_save_freq", type = int, default = 50)
 parser.add_argument("--pre_trained_model", type = str, default = "./")
-parser.add_argument("--self_ensemble", type = str2bool, default = False)
-parser.add_argument("--chop_forward", type = str2bool, default = False)
-parser.add_argument("--chop_shave", type = int, default = 10)
-parser.add_argument("--chop_size", type = int, default = 4 * 1e4)
-parser.add_argument("--test_batch", type = int, default = 1)
-
 args = parser.parse_args()
 
 model = Deblur_Net(args)

@@ -33,6 +33,6 @@ Experimental results on GOPRO dataset
 If you have any questions or comments on my codes, please email to me. [son1113@snu.ac.kr](mailto:son1113@snu.ac.kr)
 
 ## Reference
-[1] https://github.com/KupynOrest/DeblurGAN
+[1]. https://github.com/KupynOrest/DeblurGAN
 [2]. https://github.com/machrisaa/tensorflow-vgg
 * vgg19.py is fixed for my implementation.

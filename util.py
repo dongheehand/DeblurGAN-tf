@@ -76,3 +76,33 @@ def batch_gen(blur_imgs, sharp_imgs, patch_size, batch_size, random_index, step,
     
     return blur_batch, sharp_batch
 
+
+# In[ ]:
+
+
+def recursive_forwarding(blur, chopSize, session, net_model, chopShave = 20):
+    b, h, w, c = blur.shape
+    wHalf = math.floor(w / 2)
+    hHalf = math.floor(h / 2)
+    
+    wc = wHalf + chopShave
+    hc = hHalf + chopShave
+    
+    inputPatch = np.array((blur[:, :hc, :wc, :], blur[:, :hc, (w-wc):, :], blur[:,(h-hc):,:wc,:], blur[:,(h-hc):,(w-wc):,:]))
+    outputPatch = []
+    if wc * hc < chopSize:
+        for ele in inputPatch:
+            output = session.run(net_model.output, feed_dict = {net_model.blur : ele})
+            outputPatch.append(output)
+
+    else:
+        for ele in inputPatch:
+            output = recursive_forwarding(ele, chopSize, session, net_model, chopShave)
+            outputPatch.append(output)
+    
+    upper = np.concatenate((outputPatch[0][:,:hHalf,:wHalf,:], outputPatch[1][:,:hHalf,wc-w+wHalf:,:]), axis = 2)
+    rower = np.concatenate((outputPatch[2][:,hc-h+hHalf:,:wHalf,:], outputPatch[3][:,hc-h+hHalf:,wc-w+wHalf:,:]), axis = 2)
+    output = np.concatenate((upper,rower),axis = 1)
+    
+    return output
+

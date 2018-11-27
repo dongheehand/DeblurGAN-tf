@@ -4,6 +4,9 @@ from PIL import Image
 import numpy as np
 import time
 import util
+from skimage.measure import compare_ssim as ssim
+
+
 
 def train(args, model, sess, saver):
     
@@ -157,18 +160,25 @@ def test_only(args, model, sess, saver):
     print("model path is %s"%args.pre_trained_model)
     
     blur_img_name = sorted(os.listdir(args.test_Blur_path))
-        
+
     if args.in_memory :
         
         blur_imgs = util.image_loader(args.test_Blur_path, args.load_X, args.load_Y, is_train = False)
         
         for i, ele in enumerate(blur_imgs):
             blur = np.expand_dims(ele, axis = 0)
-            output = sess.run(model.output, feed_dict = {model.blur : blur})
-            output = Image.fromarray(output[0])
+            
+            if args.chop_forward:
+                output = util.recursive_forwarding(blur, args.chop_size, sess, model, args.chop_shave)
+                output = Image.fromarray(output[0])
+            
+            else:
+                output = sess.run(model.output, feed_dict = {model.blur : blur})
+                output = Image.fromarray(output[0])
+            
             split_name = blur_img_name[i].split('.')
             output.save(os.path.join(args.result_path, '%s_sharp.png'%(''.join(map(str, split_name[:-1])))))
-            
+
     else:
         
         sess.run(model.data_loader.init_op['te_init'])

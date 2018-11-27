@@ -4,6 +4,7 @@ import numpy as np
 from data_loader import dataloader
 from vgg19 import Vgg19
 
+
 class Deblur_Net():
     
     def __init__(self, args):
@@ -147,26 +148,28 @@ class Deblur_Net():
         d_loss_real = - tf.reduce_mean(self.real_prob)
         d_loss_fake = tf.reduce_mean(self.fake_prob)
         
-        self.vgg_net = Vgg19(self.vgg_path)
-        self.vgg_net.build(tf.concat([label, self.gene_img], axis = 0))
-        self.content_loss = tf.reduce_mean(tf.reduce_sum(tf.square(self.vgg_net.relu3_3[self.batch_size:] - self.vgg_net.relu3_3[:self.batch_size]), axis = 3))
-        
-        self.D_loss = d_loss_real + d_loss_fake + 10.0 * GP_loss
-        self.G_loss = - d_loss_fake + 100.0 * self.content_loss
-        
-        t_vars = tf.trainable_variables()
-        G_vars = [var for var in t_vars if 'generator' in var.name]
-        D_vars = [var for var in t_vars if 'discriminator' in var.name]
-        
-        lr = tf.minimum(self.learning_rate, tf.abs(2 * self.learning_rate - (self.learning_rate * tf.cast(self.epoch, tf.float32) / self.decay_step)))
-        self.D_train = tf.train.AdamOptimizer(learning_rate = lr).minimize(self.D_loss, var_list = D_vars)
-        self.G_train = tf.train.AdamOptimizer(learning_rate = lr).minimize(self.G_loss, var_list = G_vars)
+        if self.mode == 'train':
+            self.vgg_net = Vgg19(self.vgg_path)
+            self.vgg_net.build(tf.concat([label, self.gene_img], axis = 0))
+            self.content_loss = tf.reduce_mean(tf.reduce_sum(tf.square(self.vgg_net.relu3_3[self.batch_size:] - self.vgg_net.relu3_3[:self.batch_size]), axis = 3))
+
+            self.D_loss = d_loss_real + d_loss_fake + 10.0 * GP_loss
+            self.G_loss = - d_loss_fake + 100.0 * self.content_loss
+
+            t_vars = tf.trainable_variables()
+            G_vars = [var for var in t_vars if 'generator' in var.name]
+            D_vars = [var for var in t_vars if 'discriminator' in var.name]
+
+            lr = tf.minimum(self.learning_rate, tf.abs(2 * self.learning_rate - (self.learning_rate * tf.cast(self.epoch, tf.float32) / self.decay_step)))
+            self.D_train = tf.train.AdamOptimizer(learning_rate = lr).minimize(self.D_loss, var_list = D_vars)
+            self.G_train = tf.train.AdamOptimizer(learning_rate = lr).minimize(self.G_loss, var_list = G_vars)
+            
+            logging_D_loss = tf.summary.scalar(name = 'D_loss', tensor = self.D_loss)
+            logging_G_loss = tf.summary.scalar(name = 'G_loss', tensor = self.G_loss)
         
         self.PSNR = tf.reduce_mean(tf.image.psnr(((self.gene_img + 1.0) / 2.0), ((label + 1.0) / 2.0), max_val = 1.0))
         self.ssim = tf.reduce_mean(tf.image.ssim(((self.gene_img + 1.0) / 2.0), ((label + 1.0) / 2.0), max_val = 1.0))
         
-        logging_D_loss = tf.summary.scalar(name = 'D_loss', tensor = self.D_loss)
-        logging_G_loss = tf.summary.scalar(name = 'G_loss', tensor = self.G_loss)
         logging_PSNR = tf.summary.scalar(name = 'PSNR', tensor = self.PSNR)
         logging_ssim = tf.summary.scalar(name = 'ssim', tensor = self.ssim)
         

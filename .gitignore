@@ -1,0 +1,12 @@
+vgg19/*.npy
+result
+blur
+sharp
+val_blur
+val_sharp
+logs
+__pycache__
+*.txt
+model
+temp
+*.ipynb

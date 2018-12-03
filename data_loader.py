@@ -98,8 +98,8 @@ class dataloader():
         image_blur = tf.read_file(image_blur)
         image_sharp = tf.read_file(image_sharp)
         
-        image_blur = tf.image.decode_image(image_blur, channels = self.channel)
-        image_sharp = tf.image.decode_image(image_sharp, channels = self.channel)
+        image_blur = tf.image.decode_png(image_blur, channels = self.channel)
+        image_sharp = tf.image.decode_png(image_sharp, channels = self.channel)
         
         image_blur = tf.cast(image_blur, tf.float32)
         image_sharp = tf.cast(image_sharp, tf.float32)

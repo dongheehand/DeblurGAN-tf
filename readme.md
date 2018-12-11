@@ -56,7 +56,7 @@ tar -cvf DeblurGAN_model.tar
 ```
 python main.py --mode test_only --pre_trained_model ./path/to/model --test_Blur_path ./path/to/own/images
 ```
-4) If you have an out of memory(OOM) error, please you chop_forward option
+4) If you have an out of memory(OOM) error, please use chop_forward option
 ```
 python main.py --mode test_only --pre_trained_model ./path/to/model --test_Blur_path ./path/to/own/images --in_memory True --chop_forward True
 ```

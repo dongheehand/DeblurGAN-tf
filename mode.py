@@ -65,7 +65,6 @@ def train(args, model, sess, saver):
             
             for k in range(step):
                 s_time = time.time()
-                blur_batch, sharp_batch = util.batch_gen(blur_imgs, sharp_imgs, args.patch_size, args.batch_size, random_index, k, args.augmentation)
                 
                 for t in range(args.critic_updates):
                     _, D_loss = sess.run([model.D_train, model.D_loss], feed_dict = {model.epoch : epoch})
